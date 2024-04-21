@@ -1,6 +1,6 @@
 from pathlib import Path
 import sys
-from streamlit_webrtc import RTCConfiguration
+from streamlit_webrtc import RTCConfiguration, ClientSettings
 
 # Mendapatkan path default
 FILE = Path(__file__).resolve()
@@ -43,9 +43,10 @@ DETECTION_MODEL = MODEL_DIR / 'yolo-custom.pt'
 WEBCAM_PATH = 0
 
 # konfigurasi live-cam
-RTC_CONFIGURATION = RTCConfiguration(
-    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-)
+WEBRTC_CLIENT_SETTINGS = ClientSettings(
+        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+        media_stream_constraints={"video": True, "audio": False},
+    )
 # List clasname
 CLASS_NAME = {
     0: "handphone", 

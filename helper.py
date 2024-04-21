@@ -5,7 +5,7 @@ import cv2
 from pytube import YouTube
 from tempfile import NamedTemporaryFile
 
-from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, WebRtcMode
 
 import settings
 
@@ -118,11 +118,11 @@ def play_webcam(conf, model):
 
 
 def live(conf, model):
-    webrtc_streamer(key="example",
+    webrtc_streamer(key="Detection", 
+                    mode=WebRtcMode.SENDRECV, 
+                    client_settings=settings.WEBRTC_CLIENT_SETTINGS, 
                     video_transformer_factory=lambda: VideoTransformer(model, conf),
-                    rtc_configuration=settings.RTC_CONFIGURATION,
-                    media_stream_constraints={"video": True, "audio": False},
-                    async_processing=True,
+                    async_transform=True
                     )
 class VideoTransformer(VideoTransformerBase):
     def __init__(self, model, conf):
