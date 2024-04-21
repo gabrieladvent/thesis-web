@@ -118,12 +118,23 @@ def play_webcam(conf, model):
 
 
 def live(conf, model):
-    webrtc_streamer(key="Detection", 
-                    mode=WebRtcMode.SENDRECV, 
-                    client_settings=settings.WEBRTC_CLIENT_SETTINGS, 
-                    video_transformer_factory=lambda: VideoTransformer(model, conf),
-                    async_transform=True
-                    )
+    try:
+        webrtc_streamer(key="Detection", 
+                        mode=WebRtcMode.SENDRECV, 
+                        client_settings=settings.WEBRTC_CLIENT_SETTINGS, 
+                        video_transformer_factory=lambda: VideoTransformer(model, conf),
+                        async_transform=True
+                        )
+    except Exception as e:
+            st.error("Mohon maaf. Ada Kesalahan Saat Proses Real-Time")
+            html_error_message= """
+                <div style="padding:10px; text-align:center;">
+                    <p>
+                        Silahkan melapor di <a rel="noopener" href="mailto:bie.ritan112@gmail.com">Email</a>. 
+                    </p>
+                </div>
+                                """
+            st.markdown(html_error_message, unsafe_allow_html=True)
 class VideoTransformer(VideoTransformerBase):
     def __init__(self, model, conf):
         self.model = model
