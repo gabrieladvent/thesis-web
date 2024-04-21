@@ -10,7 +10,7 @@ This repository is the  finished product of my final project in college that com
 Thanks to [Streamlit](<https://github.com/streamlit/streamlit>) team for providing cloud uploads so that I can make this webApp more accessible to the general public.
 
 This app is up and running on Streamlit cloud server!!! You can check the demo of this web application on this link 
-[Object Detection With YOLOv8 Algorithm](https://codingmantras-yolov8-streamlit-detection-tracking-app-njcqjg.streamlit.app/)
+[Object Detection With YOLOv8 Algorithm](https://web-detection-thesis.streamlit.app/)
 
 ## Requirements
 
