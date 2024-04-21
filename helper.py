@@ -1,11 +1,12 @@
 from ultralytics import YOLO
 import time
+import av
 import streamlit as st
 import cv2
 from pytube import YouTube
 from tempfile import NamedTemporaryFile
 
-from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, WebRtcMode
 
 import settings
 
@@ -118,12 +119,28 @@ def play_webcam(conf, model):
 
 
 def live(conf, model):
+    def video_frame_callback(frame):
+        img = frame.to_ndarray(format="bgr24")
+        res = model.predict(img, show=False, conf=conf)
+        res_plotted = res[0].plot()
+        return av.VideoFrame.from_ndarray(res_plotted, format="bgr24")
+
     webrtc_streamer(key="example", 
-                    video_transformer_factory=lambda: VideoTransformer(model, conf),
+                    video_transformer_factory=lambda: video_frame_callback,
+                    mode=WebRtcMode.SENDRECV,
                     rtc_configuration=settings.RTC_CONFIGURATION,
                     media_stream_constraints={"video": True, "audio": False},
                     async_processing=True,
                     )
+
+
+# def video_frame_callback(frame, model, conf):
+#     img = frame.to_ndarray(format="bgr24")
+#     res = model.predict(img, show=False, conf=conf)
+#     res_plotted = res[0].plot()
+
+#     return res_plotted
+
 
 class VideoTransformer(VideoTransformerBase):
     def __init__(self, model, conf):
