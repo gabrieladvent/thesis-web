@@ -37,7 +37,7 @@ VIDEOS_DICT = {
 
 # ML Model config
 MODEL_DIR = ROOT / 'weights'
-DETECTION_MODEL = MODEL_DIR / 'best.pt'
+DETECTION_MODEL = MODEL_DIR / 'yolo-custom.pt'
 
 # Webcam source
 WEBCAM_PATH = 0
