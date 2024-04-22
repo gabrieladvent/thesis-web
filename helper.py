@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, WebRtcMode
 
 import settings
+import turn
 
 
 def load_model(model_path):
@@ -128,12 +129,24 @@ class VideoTransformer(VideoTransformerBase):
         return res_plotted
 
 def live(conf, model):
+    # webrtc_streamer(
+    #     key="Detection",
+    #     mode=WebRtcMode.SENDRECV,
+    #     video_transformer_factory=lambda: VideoTransformer(model, conf),
+    #     client_settings=settings.WEBRTC_CLIENT_SETTINGS,
+    #     async_transform=True
+    # )
+    
     webrtc_streamer(
-        key="Detection",
+        key="object-detection",
         mode=WebRtcMode.SENDRECV,
+        rtc_configuration={
+            "iceServers": turn.get_ice_servers(),
+            "iceTransportPolicy": "relay",
+        },
         video_transformer_factory=lambda: VideoTransformer(model, conf),
-        client_settings=settings.WEBRTC_CLIENT_SETTINGS,
-        async_transform=True
+        media_stream_constraints={"video": True, "audio": False},
+        async_processing=True,
     )
 
 
