@@ -5,7 +5,7 @@ import cv2
 from pytube import YouTube
 from tempfile import NamedTemporaryFile
 
-from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, WebRtcMode
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer, WebRtcMode, VideoProcessorFactory
 
 import settings
 import turn
@@ -17,22 +17,6 @@ def load_model(model_path):
 
 
 def showDetectFrame(conf, model, st_frame, image, is_display_tracking=None, tracker=None):
-    """
-    Algoritma.
-
-    Args:
-    - conf (float): Confidence threshold for object detection.
-    - model (YoloV8): A YOLOv8 object detection model.
-    - st_frame (Streamlit object): A Streamlit object to display the detected video.
-    - image (numpy array): A numpy array representing the video frame.
-    - is_display_tracking (bool): A flag indicating whether to display object tracking (default=None).
-
-    Returns:
-    None
-    """
-
-    # Resize the image 720x405.
-    # image = cv2.resize(image, (720, int(720*(9/16))))
 
     # Predict the objects in the image using the YOLOv8 model
     res = model.predict(image, conf=conf)
@@ -45,18 +29,7 @@ def showDetectFrame(conf, model, st_frame, image, is_display_tracking=None, trac
                    )
 
 def play_youtube(conf, model):
-    """
-
-    Parameters:
-        conf: Confidence of YOLOv8 model.
-        model: An instance of the `YOLOv8` class containing the YOLOv8 model.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
+    
     source_youtube = st.text_input("Silahkan Masukan Link YouTube")
 
     if st.button('Deteksi'):
@@ -82,19 +55,7 @@ def play_youtube(conf, model):
 
 
 def play_webcam(conf, model):
-    """
-    Algoritma.
-
-    Parameters:
-        conf: Confidence of YOLOv8 model.
-        model: An instance of the `YOLOv8` class containing the YOLOv8 model.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
+    
     source_webcam = settings.WEBCAM_PATH
     
     if st.button('Deteksi Secara Langsung'):
@@ -129,13 +90,6 @@ class VideoTransformer(VideoTransformerBase):
         return res_plotted
 
 def live(conf, model):
-    # webrtc_streamer(
-    #     key="Detection",
-    #     mode=WebRtcMode.SENDRECV,
-    #     video_transformer_factory=lambda: VideoTransformer(model, conf),
-    #     client_settings=settings.WEBRTC_CLIENT_SETTINGS,
-    #     async_transform=True
-    # )
     
     webrtc_streamer(
         key="object-detection",
@@ -147,7 +101,9 @@ def live(conf, model):
         video_transformer_factory=lambda: VideoTransformer(model, conf),
         media_stream_constraints={"video": True, "audio": False},
         async_processing=True,
+        video_processor_factory=lambda: VideoProcessorFactory(fps=60)
     )
+
 
 
 
@@ -185,19 +141,7 @@ def process_uploaded_video(conf, model):
 
 
 def play_stored_video(conf, model):
-    """
-    Plays a stored video file. Tracks and detects objects in real-time using the YOLOv8 object detection model.
 
-    Parameters:
-        conf: Confidence of YOLOv8 model.
-        model: An instance of the `YOLOv8` class containing the YOLOv8 model.
-
-    Returns:
-        None
-
-    Raises:
-        None
-    """
     source_vid = st.selectbox(
         "Silahkan Pilih Video yang Sudah Disediakan", settings.VIDEOS_DICT.keys())
 
@@ -300,7 +244,10 @@ def helpFunction():
                 
                 <div>
                     <p>
-                        Fitur yang belum berjalan: Mode Real-Time
+                        Tambahan:
+                    </p>
+                    <p>
+                        Mungkin pada saat mencoba mode deteksi video, youtube, dan realtime, hasilnya akan sedikit patah-patah dikarenakan proses berat yang sedang dilakukan. Mohon dimaklumi :)
                     </p>
                 </div>
                 """

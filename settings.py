@@ -23,8 +23,8 @@ SOURCES_LIST = [HOME, IMAGE, VIDEO, YOUTUBE, WEBCAM]
 
 # Images config
 IMAGES_DIR = ROOT / 'images'
-DEFAULT_IMAGE = IMAGES_DIR / 'office_4.jpg'
-DEFAULT_DETECT_IMAGE = IMAGES_DIR / 'office_4_detected.jpg'
+DEFAULT_IMAGE = IMAGES_DIR / 'detect.jpg'
+DEFAULT_DETECT_IMAGE = IMAGES_DIR / 'detec_result.jpg'
 IMAGE_HELP = IMAGES_DIR / 'detection-removebg-preview.png'
 
 # Videos config
@@ -33,6 +33,8 @@ VIDEOS_DICT = {
     'Video 1': VIDEO_DIR / 'video_1.mp4',
     'Video 2': VIDEO_DIR / 'video_2.mp4',
     'Video 3': VIDEO_DIR / 'video_3.mp4',
+    'Video 4': VIDEO_DIR / 'video_4.mp4',
+    'Video 5': VIDEO_DIR / 'video_5.mp4',
 }
 
 # ML Model config
