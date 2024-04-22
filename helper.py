@@ -114,20 +114,27 @@ def play_webcam(conf, model):
                     break
         except Exception as e:
             st.error("Ada Kesalahan Saat Proses Deteksi: " + str(e))
-
-
 import av
 
+class VideoTransformer(VideoTransformerBase):
+    def __init__(self, model, conf):
+        self.model = model
+        self.conf = conf
 
-def video_frame_callback(frame):
-    img = frame.to_ndarray(format="bgr24")
+    def transform(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+        res = self.model.predict(img, show=False, conf=self.conf)
+        res_plotted = res[0].plot()
+        return res_plotted
 
-    flipped = img[::-1,:,:]
-
-    return av.VideoFrame.from_ndarray(flipped, format="bgr24")
-
-def live (model, conf):
-    webrtc_streamer(key="example", video_frame_callback=video_frame_callback)
+def live(conf, model):
+    webrtc_streamer(
+        key="Detection",
+        mode=WebRtcMode.SENDRECV,
+        video_transformer_factory=lambda: VideoTransformer(model, conf),
+        client_settings=settings.WEBRTC_CLIENT_SETTINGS,
+        async_transform=True
+    )
 
 
 
