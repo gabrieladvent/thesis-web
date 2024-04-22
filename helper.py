@@ -51,7 +51,7 @@ def play_youtube(conf, model):
                     vid_cap.release()
                     break
         except Exception as e:
-            st.sidebar.error("Ada Kesalahan Saat Memproses Link: " + str(e))
+            st.error("Ada Kesalahan Saat Memproses Link: " + str(e))
 
 
 def play_webcam(conf, model):
@@ -90,8 +90,7 @@ class VideoTransformer(VideoTransformerBase):
         return res_plotted
 
 def live(conf, model):
-    
-    webrtc_streamer(
+    webrtc_ctx = webrtc_streamer(
         key="object-detection",
         mode=WebRtcMode.SENDRECV,
         rtc_configuration={
@@ -103,9 +102,6 @@ def live(conf, model):
         async_processing=True,
         video_processor_factory=lambda: VideoProcessorFactory(fps=60)
     )
-
-
-
 
 def process_uploaded_video(conf, model):
     uploaded_video = st.file_uploader("Upload a video file", type=["mp4", "avi", "mov"])
@@ -137,8 +133,6 @@ def process_uploaded_video(conf, model):
                         break
             except Exception as e:
                 st.error("Error loading video: " + str(e))
-    
-
 
 def play_stored_video(conf, model):
 
