@@ -78,8 +78,5 @@ pip install ultralytics streamlit pytube
 
 This app uses [YOLOv8](<https://github.com/ultralytics/ultralytics>) for object detection algorithm and [Streamlit](<https://github.com/streamlit/streamlit>) library for the user interface.
 
-### Disclaimer
-
-Please note that this project is intended for educational purposes only and is the final result of my thesis. so it should not be used in production environments
-
+Please contribute to the optimisation of this website and to gain in-depth knowledge.
 **Hit star ⭐ if you like this repo!!!**
